@@ -12,8 +12,8 @@ from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 # =========================
 # CONFIG (à changer ici)
 # =========================
-INPUT_FILE = r"C:\Users\PP0A918L\Documents\Administratif (perso)\Parcours.xlsx"
-SHEET_NAME = "Liste complète"
+INPUT_FILE = r"~/PycharmProjects/Panneaux/Parcours.xlsx"
+SHEET_NAME = "Panneaux permanents"
 PROXY = "http://vip-users.proxy.edf.fr:3131"
 
 SERVICE_SECONDS = 5 * 60                # 5 min par arrêt
@@ -27,7 +27,7 @@ SPLIT_MODE = "EQUAL_COUNT"
 # En mode EQUAL_COUNT :
 #   - mets un entier (ex: 8) pour imposer N
 #   - ou laisse None pour auto-calculer N ≈ total / 1h30
-NUM_SEGMENTS = 7
+NUM_SEGMENTS = None
 
 # Google Maps : 10 lieux max par lien (origine comprise) => 9 stops après l'origine
 MAX_LOCS_PER_GOOGLE_LINK = 10
