@@ -1,7 +1,7 @@
 import math
 import time
 import urllib.parse
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 import pandas as pd
 import requests
@@ -27,7 +27,11 @@ SPLIT_MODE = "EQUAL_COUNT"
 # En mode EQUAL_COUNT :
 #   - mets un entier (ex: 8) pour imposer N
 #   - ou laisse None pour auto-calculer N ≈ total / 1h30
-NUM_SEGMENTS = None
+NUM_SEGMENTS = 5
+
+# Coordonnées manuelles optionnelles : identifiant du point -> (latitude, longitude)
+# Exemple : FORCED_COORDS = {"42": (48.0000, 6.0000)}
+FORCED_COORDS = {}
 
 # Google Maps : 10 lieux max par lien (origine comprise) => 9 stops après l'origine
 MAX_LOCS_PER_GOOGLE_LINK = 10
@@ -53,7 +57,14 @@ OUT_DIR = get_desktop_dir()
 # =========================
 SESSION = requests.Session()
 SESSION.trust_env = False
-SESSION.proxies.update({"http": PROXY, "https": PROXY})
+
+# Activer le proxy uniquement pour un fichier d'entrée avec un chemin Windows
+# (par exemple C:\Users\... ou un chemin réseau \\serveur\partage\...).
+if PureWindowsPath(INPUT_FILE).is_absolute():
+    SESSION.proxies.update({"http": PROXY, "https": PROXY})
+    print("[HTTP] Proxy activé (chemin d'entrée Windows)")
+else:
+    print("[HTTP] Connexion directe (pas de proxy)")
 
 retry = Retry(
     total=8,
